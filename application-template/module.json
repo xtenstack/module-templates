@@ -1,0 +1,9 @@
+{
+    "key": "widgets",
+    "code": "wdgt",
+    "tier": "application",
+    "className": "XtenApplicationTemplate\\Module",
+    "surface": "backend",
+    "menu": "menu.php",
+    "migrations": "migrations"
+}

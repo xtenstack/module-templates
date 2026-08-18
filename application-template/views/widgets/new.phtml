@@ -1,0 +1,26 @@
+<div class="row mb-2">
+  <div class="col-12">
+    <h1>New widget</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12 col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <form method="post" action="<?= $this->url->get('widgets/widgets/create') ?>">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="<?= $this->escaper->escapeHtml((string) $widget->name) ?>" required>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="5"><?= $this->escaper->escapeHtml((string) $widget->description) ?></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Create widget</button>
+          <a href="<?= $this->url->get('widgets/widgets') ?>" class="btn btn-link">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
