@@ -1,0 +1,70 @@
+<?php
+/** @var \Phalcon\Mvc\View\Engine\Php $this */
+// Mirrors app/modules/backend/views/index.phtml's AdminLTE wrapper so this
+// module's own pages (routed under /tags/...) look identical to the
+// backend module they're linked from — duplicated rather than shared
+// across the module boundary (see CLAUDE.md: no cross-module reach-ins),
+// same pattern xtenstack/requirements-module and application-template use.
+// This file (plus partials/topnav.phtml, sidenav.phtml, footer.phtml) is
+// NOT optional — without it Phalcon's View component has nothing to wrap
+// the module's action templates in, so pages render with no <html> shell
+// and, crucially, no CSRF meta tags at all (confirmed directly against
+// application-template: a create POST fails enforceCsrf() without this
+// file present, since there is no CSRF token to submit in the first
+// place).
+$controllerName = $this->dispatcher->getControllerName();
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?= $this->escaper->escapeHtml($this->settings->get('site_name', 'App Skeleton')) ?> — Tags</title>
+    <meta name="csrf-key" content="<?= $this->escaper->escapeHtml($this->security->getTokenKey()) ?>">
+    <meta name="csrf-token" content="<?= $this->escaper->escapeHtml($this->security->getToken()) ?>">
+    <link rel="stylesheet" href="/assets/adminlte/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/assets/adminlte/css/adminlte.min.css">
+    <link rel="stylesheet" href="/assets/css/theme.css">
+  </head>
+  <body class="sidebar-mini layout-fixed">
+<?php
+$flashTypeClasses = [
+    'success' => 'alert-success',
+    'error'   => 'alert-danger',
+    'notice'  => 'alert-info',
+    'warning' => 'alert-warning',
+];
+$flashHtml = '';
+foreach ($this->flash->getMessages() as $flashType => $flashMessages) {
+    foreach ($flashMessages as $flashMessage) {
+        $flashHtml .= '<div class="alert alert-dismissible fade show ' . ($flashTypeClasses[$flashType] ?? 'alert-secondary') . '">'
+            . '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+            . $this->escaper->escapeHtml($flashMessage)
+            . '</div>';
+    }
+}
+$this->flash->clear();
+?>
+    <div class="wrapper">
+      <?= $this->partial('partials/topnav') ?>
+
+      <?= $this->partial('partials/sidenav', ['controllerName' => $controllerName]) ?>
+
+      <div class="content-wrapper">
+        <div class="content">
+          <div class="container-fluid">
+            <?= $flashHtml ?>
+            <?= $this->getContent() ?>
+          </div>
+        </div>
+      </div>
+
+      <?= $this->partial('partials/footer') ?>
+    </div>
+
+    <script src="/assets/adminlte/plugins/jquery/jquery.min.js"></script>
+    <script src="/assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/adminlte/js/adminlte.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+  </body>
+</html>
