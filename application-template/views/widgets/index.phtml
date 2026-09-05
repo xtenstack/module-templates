@@ -1,0 +1,81 @@
+<?php $baseUrl = $this->url->get('widgets/widgets'); ?>
+<div class="row mb-2">
+  <div class="col-12 d-flex justify-content-between align-items-center">
+    <h1>Widgets</h1>
+    <div>
+      <a href="<?= $baseUrl ?>/new" class="btn btn-primary">New Widget</a>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-2">
+  <div class="col-12">
+    <?= \App_skeleton\ListView::searchForm($baseUrl, $listState['q'], $preserveQuery, 'Search name/description…') ?>
+  </div>
+</div>
+
+<form method="post" action="<?= $this->url->get('widgets/widgets/bulk') ?>" id="widgets-bulk-form">
+  <div class="row mb-2">
+    <div class="col-12 d-flex align-items-center flex-wrap" style="gap: 0.5rem;">
+      <div class="dropdown">
+        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="bulk-dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          With selected
+        </button>
+        <div class="dropdown-menu p-3 shadow" style="min-width: 240px;" aria-labelledby="bulk-dropdown-toggle">
+          <button type="submit" name="bulk_action" value="delete" class="btn btn-sm btn-outline-danger btn-block" onclick="return confirm('Delete the selected widget(s)? This cannot be undone from here.')">Delete selected</button>
+        </div>
+      </div>
+      <span class="text-muted small" id="bulk-selected-count">0 selected</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+          <table class="table table-striped mb-0">
+            <thead>
+              <tr>
+                <th style="width: 2.5rem;"><input type="checkbox" id="bulk-select-all" aria-label="Select all widgets"></th>
+                <th><?= \App_skeleton\ListView::sortLink($baseUrl, 'Name', 'name', $listState['sort'], $listState['dir'], $preserveQuery) ?></th>
+                <th>Description</th>
+                <th><?= \App_skeleton\ListView::sortLink($baseUrl, 'Created', 'created', $listState['sort'], $listState['dir'], $preserveQuery) ?></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+<?php foreach ($widgets as $widget): ?>
+              <tr>
+                <td><input type="checkbox" class="bulk-row-checkbox" name="widget_ids[]" value="<?= $widget->id ?>" aria-label="Select <?= $this->escaper->escapeHtmlAttr($widget->name) ?>"></td>
+                <td><?= $this->escaper->escapeHtml($widget->name) ?></td>
+                <td><?= $this->escaper->escapeHtml($widget->description ?: '—') ?></td>
+                <td><?= $this->escaper->escapeHtml($widget->created_at) ?></td>
+                <td class="text-right">
+                  <a href="<?= $baseUrl ?>/view/<?= $widget->id ?>" class="btn btn-sm btn-outline-secondary">View</a>
+                  <a href="<?= $baseUrl ?>/edit/<?= $widget->id ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
+                  <button type="submit" formaction="<?= $baseUrl ?>/delete/<?= $widget->id ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete <?= $this->escaper->escapeHtmlAttr($widget->name) ?>?')">Delete</button>
+                </td>
+              </tr>
+<?php endforeach; ?>
+<?php if (!count($widgets)): ?>
+              <tr>
+                <td colspan="5" class="text-center text-muted">No widgets yet.</td>
+              </tr>
+<?php endif; ?>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+      <span class="text-muted small"><?= $listState['total'] ?> widget<?= $listState['total'] === 1 ? '' : 's' ?></span>
+      <?= \App_skeleton\ListView::pagination($baseUrl, $listState['page'], $listState['totalPages'], $preserveQuery) ?>
+    </div>
+  </div>
+</form>
+
+<script src="/assets/js/bulk-select.js"></script>
