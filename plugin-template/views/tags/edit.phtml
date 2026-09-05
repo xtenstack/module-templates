@@ -1,0 +1,26 @@
+<div class="row mb-2">
+  <div class="col-12">
+    <h1>Edit <?= $this->escaper->escapeHtml($tag->name) ?></h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12 col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <form method="post" action="<?= $this->url->get('tags/tags/update/' . $tag->id) ?>">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="<?= $this->escaper->escapeHtml((string) $tag->name) ?>" required>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="5"><?= $this->escaper->escapeHtml((string) $tag->description) ?></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+          <a href="<?= $this->url->get('tags/tags/view/' . $tag->id) ?>" class="btn btn-link">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

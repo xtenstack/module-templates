@@ -1,0 +1,9 @@
+{
+    "key": "tags",
+    "code": "tags",
+    "tier": "plugin",
+    "className": "XtenPluginTemplate\\Module",
+    "surface": "backend",
+    "menu": "menu.php",
+    "migrations": "migrations"
+}
